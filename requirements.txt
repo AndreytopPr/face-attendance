@@ -1,5 +1,5 @@
 Flask==2.0.1
-SQLAlchemy==1.4.23
+SQLAlchemy==2.0.23
 opencv-python-headless==4.5.3.56
 numpy==1.24.3
 gunicorn==20.1.0
