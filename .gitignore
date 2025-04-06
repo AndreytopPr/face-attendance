@@ -2,8 +2,12 @@
 __pycache__/
 venv/
 venv_new/
+venv38/
 .env
 *.db
 logs/
-.DS_Store 
+.DS_Store
+# Исключаем большие файлы
+venv38/Lib/site-packages/cv2/cv2.pyd
+venv38/Lib/site-packages/face_recognition_models/models/shape_predictor_68_face_landmarks.dat 
  
