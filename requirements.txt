@@ -10,5 +10,4 @@ python-dateutil==2.8.2
 cmake==3.25.2
 setuptools==65.5.1
 wheel==0.38.4
---only-binary :all:
-chart.js==3.5.1 
+--only-binary :all: 
