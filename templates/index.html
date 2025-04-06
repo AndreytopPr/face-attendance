@@ -200,6 +200,23 @@
             border-radius: 8px;
             margin: 20px 0;
         }
+        .statistics-container {
+            padding: 20px;
+            text-align: center;
+        }
+        .statistics-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .statistics-link:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -208,9 +225,10 @@
             <h1>Система учета посещаемости с распознаванием лиц</h1>
         </div>
         
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('attendance')">Посещаемость</button>
-            <button class="tab" onclick="showTab('students')">Управление студентами</button>
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-tab="attendance">Посещаемость</button>
+            <button class="nav-btn" data-tab="students">Студенты</button>
+            <button class="nav-btn" data-tab="statistics">Статистика</button>
         </div>
 
         <div id="attendance-tab" class="tab-content active">
@@ -257,6 +275,12 @@
                     <tbody id="studentsBody">
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="statistics-tab" style="display: none;">
+            <div class="statistics-container">
+                <a href="/statistics_page" class="statistics-link">Перейти к статистике</a>
             </div>
         </div>
     </div>
@@ -499,6 +523,22 @@
                 closeModal();
             }
         }
+
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+                
+                // Show selected tab content
+                const tabId = button.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).style.display = 'block';
+            });
+        });
     </script>
 </body>
 </html> 

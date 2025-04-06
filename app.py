@@ -261,6 +261,94 @@ def update_student(student_id):
         session.rollback()
         return jsonify({'error': f'Произошла ошибка: {str(e)}'}), 500
 
+@app.route('/statistics')
+def get_statistics():
+    try:
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        
+        # Base query
+        query = session.query(Attendance)
+        
+        # Apply date filters if provided
+        if start_date:
+            query = query.filter(Attendance.date >= datetime.strptime(start_date, '%Y-%m-%d'))
+        if end_date:
+            query = query.filter(Attendance.date <= datetime.strptime(end_date, '%Y-%m-%d'))
+        
+        # Get all attendance records
+        attendance_records = query.all()
+        
+        # Calculate statistics
+        total_attendance = len(attendance_records)
+        unique_students = len(set(record.student_id for record in attendance_records))
+        
+        # Group attendance by date
+        attendance_by_date = {}
+        for record in attendance_records:
+            date_str = record.date.strftime('%Y-%m-%d')
+            if date_str not in attendance_by_date:
+                attendance_by_date[date_str] = 0
+            attendance_by_date[date_str] += 1
+        
+        # Calculate average attendance per day
+        if attendance_by_date:
+            avg_attendance = sum(attendance_by_date.values()) / len(attendance_by_date)
+        else:
+            avg_attendance = 0
+        
+        # Prepare data for chart
+        dates = sorted(attendance_by_date.keys())
+        attendance_counts = [attendance_by_date[date] for date in dates]
+        
+        return jsonify({
+            'total_attendance': total_attendance,
+            'unique_students': unique_students,
+            'avg_attendance': avg_attendance,
+            'dates': dates,
+            'attendance_counts': attendance_counts
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/export_csv')
+def export_csv():
+    try:
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        
+        # Base query
+        query = session.query(Attendance, Student).join(Student, Attendance.student_id == Student.id)
+        
+        # Apply date filters if provided
+        if start_date:
+            query = query.filter(Attendance.date >= datetime.strptime(start_date, '%Y-%m-%d'))
+        if end_date:
+            query = query.filter(Attendance.date <= datetime.strptime(end_date, '%Y-%m-%d'))
+        
+        # Get all records
+        records = query.all()
+        
+        # Prepare CSV data
+        csv_data = "Имя студента,Дата и время\n"
+        for attendance, student in records:
+            csv_data += f"{student.name},{attendance.date.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        
+        # Create response
+        response = Response(
+            csv_data,
+            mimetype='text/csv',
+            headers={'Content-Disposition': 'attachment; filename=attendance.csv'}
+        )
+        
+        return response
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/statistics_page')
+def statistics_page():
+    return render_template('statistics.html')
+
 @app.errorhandler(404)
 def not_found_error(error):
     return jsonify({'error': 'Страница не найдена'}), 404

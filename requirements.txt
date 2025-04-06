@@ -1,7 +1,10 @@
 Flask==2.0.1
 SQLAlchemy==1.4.23
 opencv-python-headless==4.5.3.56
-numpy==1.19.5
+numpy==1.21.2
 gunicorn==20.1.0
 face-recognition==1.3.0
-python-dotenv==1.0.0 
+python-dotenv==1.0.0
+Pillow==8.3.2
+python-dateutil==2.8.2
+chart.js==3.5.1 
