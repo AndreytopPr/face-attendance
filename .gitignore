@@ -1,12 +1,57 @@
-*.pyc
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
 venv/
 venv_new/
 venv38/
-.env
+ENV/
+env/
+.env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Database
 *.db
+*.sqlite3
+
+# Logs
 logs/
+*.log
+
+# System
 .DS_Store
+Thumbs.db
+
+# Project specific
+face_recognition_models/models/
+*.pyd
+*.dat
+
 # Исключаем большие файлы
 venv38/Lib/site-packages/cv2/cv2.pyd
 venv38/Lib/site-packages/face_recognition_models/models/shape_predictor_68_face_landmarks.dat 
