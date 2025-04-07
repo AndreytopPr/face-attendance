@@ -4,7 +4,7 @@ services:
     env: python
     buildCommand: |
       # Настройка swap-файла
-      fallocate -l 4G /swapfile \
+      fallocate -l 8G /swapfile \
         && chmod 600 /swapfile \
         && mkswap /swapfile \
         && swapon /swapfile \
@@ -66,8 +66,10 @@ services:
       - key: MAKEFLAGS
         value: "-j1"
       - key: CFLAGS
-        value: "-O2 -march=native -mtune=native"
+        value: "-O2 -march=native -mtune=native -pipe"
       - key: CXXFLAGS
-        value: "-O2 -march=native -mtune=native"
+        value: "-O2 -march=native -mtune=native -pipe"
       - key: LDFLAGS
-        value: "-Wl,--as-needed" 
+        value: "-Wl,--as-needed"
+      - key: SWAP_SIZE
+        value: "8G" 
