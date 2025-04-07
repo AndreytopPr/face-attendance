@@ -3,13 +3,8 @@ services:
     name: face-attendance
     env: python
     buildCommand: |
-      # Настройка swap-файла
-      fallocate -l 8G /swapfile \
-        && chmod 600 /swapfile \
-        && mkswap /swapfile \
-        && swapon /swapfile \
-        # Этап 1: Установка системных зависимостей
-        && apt-get update && apt-get install -y \
+      # Этап 1: Установка системных зависимостей
+      apt-get update && apt-get install -y \
         # Базовые инструменты разработки
         python3-dev \
         build-essential \
@@ -37,16 +32,15 @@ services:
         # Этап 2: Установка базовых Python пакетов
         && pip install --no-cache-dir wheel setuptools \
         && pip install --no-cache-dir numpy==1.24.3 \
-        # Этап 3: Установка основных зависимостей
+        # Этап 3: Установка предварительно скомпилированного dlib
+        && pip install --no-cache-dir https://github.com/ageitgey/face_recognition_models/raw/master/face_recognition_models/models/dlib_face_recognition_resnet_model_v1.dat \
+        # Этап 4: Установка основных зависимостей
         && pip install --no-cache-dir Flask==2.0.1 gunicorn==20.1.0 SQLAlchemy==2.0.23 \
-        # Этап 4: Установка пакетов для обработки изображений
+        # Этап 5: Установка пакетов для обработки изображений
         && pip install --no-cache-dir opencv-python-headless==4.8.1.78 Pillow==10.2.0 \
-        # Этап 5: Установка face-recognition и остальных пакетов
+        # Этап 6: Установка face-recognition и остальных пакетов
         && pip install --no-cache-dir face-recognition==1.3.0 \
-        && pip install --no-cache-dir python-dotenv==1.0.0 python-dateutil==2.8.2 \
-        # Очистка swap-файла
-        && swapoff /swapfile \
-        && rm /swapfile
+        && pip install --no-cache-dir python-dotenv==1.0.0 python-dateutil==2.8.2
     startCommand: gunicorn app:app
     envVars:
       - key: PYTHON_VERSION
